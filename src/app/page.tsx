@@ -21,6 +21,7 @@ export default function Home() {
   const [profit, setProfit] = useState(0);
   const [member, setMember] = useState(0);
   const [projectName, setProjectName] = useState("");
+  const [isOptimized, setIsOptimized] = useState(false);
 
   const submitProject = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -33,6 +34,25 @@ export default function Home() {
     let temp = [...projects];
     temp.push({ projectName: projectName, member: member, profit: profit });
     setProjects(temp);
+
+    // Reset input
+    setProjectName("");
+    setMember(0);
+    setProfit(0);
+
+    // Optimize
+    if (isOptimized) {
+      // Validate projects
+      if (temp.length === 0 || members === 0) {
+        return;
+      }
+
+      // Optimize with DP
+      let optimize = new DP();
+      let result: Result = optimize.optimize(temp, members);
+      setChosenProjects(result.selectedProjects);
+      setIsOptimized(true);
+    }
   };
 
   const optimizeResource = (e: FormEvent<HTMLButtonElement>) => {
@@ -46,6 +66,7 @@ export default function Home() {
     let optimize = new DP();
     let result: Result = optimize.optimize(projects, members);
     setChosenProjects(result.selectedProjects);
+    setIsOptimized(true);
   };
 
   const reset = (e: FormEvent<HTMLButtonElement>) => {
@@ -54,6 +75,27 @@ export default function Home() {
     // Reset
     setProjects([]);
     setChosenProjects([]);
+    setIsOptimized(false);
+  };
+
+  const deleteProject = (idx: number) => {
+    // Remove project by index
+    let temp = [...projects];
+    temp.splice(idx, 1);
+    setProjects(temp);
+
+    if (isOptimized) {
+      // Validate projects
+      if (temp.length === 0 || members === 0) {
+        return;
+      }
+
+      // Optimize with DP
+      let optimize = new DP();
+      let result: Result = optimize.optimize(temp, members);
+      setChosenProjects(result.selectedProjects);
+      setIsOptimized(true);
+    }
   };
 
   return (
@@ -92,7 +134,7 @@ export default function Home() {
                   className="p-2"
                   onChange={(e) => setProfit(Number(e.target.value))}
                 />
-                <label>Jumlah Anggota</label>
+                <label>Needed Members</label>
                 <input
                   type="number"
                   value={member}
@@ -132,6 +174,7 @@ export default function Home() {
                     <th className="w-1/3 border-2">Project Name</th>
                     <th className="w-1/6 border-2">Needed Members</th>
                     <th className="w-1/6 border-2">Profits</th>
+                    <th className="w-1/12 border-2">Delete</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -140,6 +183,14 @@ export default function Home() {
                       <td className="border-2 p-2">{el.projectName}</td>
                       <td className="border-2 p-2">{el.member}</td>
                       <td className="border-2 p-2">{el.profit}</td>
+                      <td className="border-2 p-2 text-center">
+                        <button
+                          onClick={() => deleteProject(idx)}
+                          className="cursor-pointer"
+                        >
+                          X
+                        </button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
