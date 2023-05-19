@@ -27,21 +27,21 @@ class DP {
 
         // Build up the table iteratively
         for (let i = 1; i <= n; i++) {
-            const { projectName, member, profit } = projects[i - 1];
+            const { member, profit } = projects[i - 1];
             for (let j = 1; j <= maxMembers; j++) {
-            if (member > j) {
-                // If the current project's member exceeds the current capacity, skip it
-                dp[i][j] = dp[i - 1][j];
-            } else {
-                // Consider the maximum profit by either including or excluding the current project
-                const includeProfit = dp[i - 1][j - member] + profit;
-                if (includeProfit > dp[i - 1][j]) {
-                    dp[i][j] = includeProfit;
-                    selected[i][j] = true; // Mark the project as selected
-                } else {
+                if (member > j) {
+                    // If the current project's member exceeds the current capacity, skip it
                     dp[i][j] = dp[i - 1][j];
+                } else {
+                    // Consider the maximum profit by either including or excluding the current project
+                    const includeProfit = dp[i - 1][j - member] + profit;
+                    if (includeProfit > dp[i - 1][j]) {
+                        dp[i][j] = includeProfit;
+                        selected[i][j] = true; // Mark the project as selected
+                    } else {
+                        dp[i][j] = dp[i - 1][j];
+                    }
                 }
-            }
             }
         }
 
