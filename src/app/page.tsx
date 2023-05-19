@@ -85,11 +85,6 @@ export default function Home() {
     setProjects(temp);
 
     if (isOptimized) {
-      // Validate projects
-      if (temp.length === 0 || members === 0) {
-        return;
-      }
-
       // Optimize with DP
       let optimize = new DP();
       let result: Result = optimize.optimize(temp, members);
@@ -100,7 +95,7 @@ export default function Home() {
 
   return (
     <>
-      <main className="bg-gray-400 min-h-[100vh] flex">
+      <main className="bg-[#0A1929] min-h-[100vh] flex text-white">
         <div className="w-1/4 fixed h-full border-2 pt-10 flex flex-col">
           <h1 className="text-3xl font-semibold text-center">
             Resource Management
@@ -110,7 +105,7 @@ export default function Home() {
             <input
               type="number"
               value={members}
-              className="text-center p-2"
+              className="text-center p-2 text-black"
               onChange={(e) => setMembers(Number(e.target.value))}
             />
           </div>
@@ -124,21 +119,21 @@ export default function Home() {
                 <input
                   type="text"
                   value={projectName}
-                  className="p-2"
+                  className="p-2 text-black"
                   onChange={(e) => setProjectName(e.target.value)}
                 />
                 <label>Profit</label>
                 <input
                   type="number"
                   value={profit}
-                  className="p-2"
+                  className="p-2 text-black"
                   onChange={(e) => setProfit(Number(e.target.value))}
                 />
                 <label>Needed Members</label>
                 <input
                   type="number"
                   value={member}
-                  className="p-2"
+                  className="p-2 text-black"
                   onChange={(e) => setMember(Number(e.target.value))}
                 />
               </div>
@@ -163,12 +158,12 @@ export default function Home() {
           </button>
         </div>
         <div className="w-3/4 px-16 py-8 ml-[25%] max-h-[100vh]">
-          <div className="flex flex-col gap-10 h-full">
+          <div className="flex flex-col gap-4 h-full">
             <div className="h-1/2 max-h-1/2 overflow-auto flex flex-col gap-4 scrollbar-thin scrollbar-thumb-gray-500">
               <h1 className="text-2xl text-center font-semibold">
                 List All Projects
               </h1>
-              <table className="border-2 w-full bg-white overflow-y-auto">
+              <table className="border-2 w-full bg-white overflow-y-auto text-black">
                 <thead>
                   <tr className="border-2">
                     <th className="w-1/3 border-2">Project Name</th>
@@ -200,7 +195,7 @@ export default function Home() {
               <h1 className="text-2xl text-center font-semibold">
                 Chosen Projects
               </h1>
-              <table className="border-2 w-full bg-white overflow-y-auto">
+              <table className="border-2 w-full bg-white overflow-y-auto text-black">
                 <thead>
                   <tr className="border-2">
                     <th className="w-1/3 border-2">Project Name</th>
@@ -218,6 +213,13 @@ export default function Home() {
                   ))}
                 </tbody>
               </table>
+            </div>
+            <div className="">
+              Total Profit :{" "}
+              {chosenProjects.reduce(
+                (total, current) => total + current.profit,
+                0
+              )}
             </div>
           </div>
         </div>
